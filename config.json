@@ -31,7 +31,7 @@
     "${game_dir}/data/default.ide"
   ],
 
-  "ainodes_paths": "${game_dir}/data/Paths/",
+  "ainodes_path": "${game_dir}/data/Paths/",
 
   "handling_path": "${game_dir}/data/handling.cfg",
   "water_path": "${game_dir}/data/water.dat",
