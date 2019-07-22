@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Settings {
 		};
 		OptionsWindow.FloatInput m_gravityInput = new OptionsWindow.FloatInput( "Gravity", -10f, 50f ) {
 			getValue = () => -Physics.gravity.y,
-			setValue = (value) => { Physics.gravity = new Vector3(Physics.gravity.x, -value, Physics.gravity.z); },
+			setValue = (value) => { Physics.gravity = new Vector3(Physics.gravity.x, -9.81f, Physics.gravity.z); },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 		OptionsWindow.BoolInput m_displayHealthBarsInput = new OptionsWindow.BoolInput ("Display health bar above peds") {

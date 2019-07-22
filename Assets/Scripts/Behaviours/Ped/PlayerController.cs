@@ -174,7 +174,7 @@ namespace SanAndreasUnity.Behaviours
 			else if (Input.GetKeyDown (KeyCode.E))
 				m_ped.OnNextWeaponButtonPressed();
 
-			if (Input.GetButtonDown("Use"))
+			if (Input.GetButtonDown("Use") || Input.GetKeyDown(KeyCode.F))
 				m_ped.OnSubmitPressed ();
 
 			if (Input.GetButtonDown("Jump"))

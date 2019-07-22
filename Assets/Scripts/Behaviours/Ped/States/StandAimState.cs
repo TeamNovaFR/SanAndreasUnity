@@ -13,7 +13,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override void OnBecameActive ()
 		{
 			base.OnBecameActive ();
-		//	m_ped.PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND);
+            //	m_ped.PlayerModel.(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND);
 		}
 
 		protected override AnimationState UpdateAnimsNonAWA ()

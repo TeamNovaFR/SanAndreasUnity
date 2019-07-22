@@ -204,6 +204,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             var brake = Input.GetButton("Brake") ? 1.0f : 0.0f;
             var speed = Vector3.Dot(m_vehicle.Velocity, m_vehicle.transform.forward);
 
+            // Repair vehicle
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                m_vehicle.GetComponent<VehicleDamage>().Repair();
+            }
+
             if (speed * accel < 0f)
             {
                 brake = Mathf.Max(brake, 0.75f);

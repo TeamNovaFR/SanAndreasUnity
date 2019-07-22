@@ -235,9 +235,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             public SeatAlignment Alignment { get; set; }
 
             public Transform Parent { get; set; }
+            public Transform door { get; set; }
 
-			/// <summary> Ped that is occupying this seat. </summary>
-			public Ped OccupyingPed { get; internal set; }
+            /// <summary> Ped that is occupying this seat. </summary>
+            public Ped OccupyingPed { get; internal set; }
 
 			public bool IsTaken { get { return this.OccupyingPed != null; } }
 
@@ -331,7 +332,23 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void AttachSeat(Transform parent, SeatAlignment alignment)
         {
-            _seats.Add(new Seat { Parent = parent, Alignment = alignment });
+            Transform _door = parent;
+            switch (alignment)
+            {
+                case SeatAlignment.BackLeft:
+                    _door = GetPart("door_lr_dummy");
+                    break;
+                case SeatAlignment.BackRight:
+                    _door = GetPart("door_rr_dummy");
+                    break;
+                case SeatAlignment.FrontLeft:
+                    _door = GetPart("door_lf_dummy");
+                    break;
+                case SeatAlignment.FrontRight:
+                    _door = GetPart("door_rf_dummy");
+                    break;
+            }
+            _seats.Add(new Seat { Parent = parent, Alignment = alignment, door = _door });
         }
 
         private void Initialize(VehicleDef def, int[] colors = null)
@@ -447,7 +464,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 hinge.useLimits = true;
 
                 var limit = 90.0f * ((doorAlignment == DoorAlignment.LeftFront || doorAlignment == DoorAlignment.LeftRear) ? 1.0f : -1.0f);
-                hinge.limits = new JointLimits { min = Mathf.Min(0, limit), max = Mathf.Max(0, limit), };
+                hinge.limits = new JointLimits { min = 0, max = 0, };
                 hinge.connectedBody = gameObject.GetComponent<Rigidbody>();
             }
 
@@ -494,7 +511,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             // Add vehicle damage
 
-            /*
+            
             var dam = gameObject.AddComponent<VehicleDamage>();
             dam.damageParts = new Transform[] { transform.GetChild(0).Find("engine") };
             dam.deformMeshes = gameObject.GetComponentsInChildren<MeshFilter>();
@@ -506,7 +523,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             //OptimizeVehicle();
 
             dam.deformColliders = gameObject.GetComponentsInChildren<MeshCollider>();
-            */
+            
             
 
             gameObject.SetLayerRecursive(Layer);

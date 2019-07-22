@@ -97,23 +97,87 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
-		private System.Collections.IEnumerator EnterVehicleAnimation(Vehicle.Seat seat, bool immediate)
+        public enum DoorAlignment
+        {
+            None,
+            RightFront,
+            LeftFront,
+            RightRear,
+            LeftRear,
+        }
+
+        private DoorAlignment GetDoorAlignment(string frameName)
+        {
+            switch (frameName)
+            {
+                case "door_rf_dummy":
+                    return DoorAlignment.RightFront;
+
+                case "door_lf_dummy":
+                    return DoorAlignment.LeftFront;
+
+                case "door_rr_dummy":
+                    return DoorAlignment.RightRear;
+
+                case "door_lr_dummy":
+                    return DoorAlignment.LeftRear;
+
+                default:
+                    return DoorAlignment.None;
+            }
+        }
+
+        private System.Collections.IEnumerator EnterVehicleAnimation(Vehicle.Seat seat, bool immediate)
 		{
 			var animIndex = seat.IsLeftHand ? AnimIndex.GetInLeft : AnimIndex.GetInRight;
+            var animOpenIndex = seat.IsLeftHand ? "CAR_open_LHS" : "CAR_open_RHS";
+            var animCloseIndex = seat.IsLeftHand ? AnimIndex.CAR_closedoor_LHS : AnimIndex.CAR_closedoor_LHS;
+            var animSittedIndex = "CAR_sit";
 
-			m_model.VehicleParentOffset = Vector3.Scale(m_model.GetAnim(AnimGroup.Car, animIndex).RootEnd, new Vector3(-1, -1, -1));
+            m_model.VehicleParentOffset = Vector3.Scale(m_model.GetAnim(AnimGroup.Car, animIndex).RootEnd, new Vector3(-1, -1, -1));
 
 			if (!immediate)
 			{
-				var animState = m_model.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
+				var animState = m_model.PlayAnim("ped", animOpenIndex, PlayMode.StopAll);
 				animState.wrapMode = WrapMode.Once;
+                Debug.Log(seat.door.name);
 
-				// wait until anim is finished or vehicle is destroyed
-				while (animState != null && animState.enabled && this.CurrentVehicle != null)
+                HingeJoint hinge = seat.door.GetComponent<HingeJoint>();
+                var doorAlignment = GetDoorAlignment(seat.door.name);
+                var limit = 90.0f * ((doorAlignment == DoorAlignment.LeftFront || doorAlignment == DoorAlignment.LeftRear) ? 1.0f : -1.0f);
+
+                
+                // wait until anim is finished or vehicle is destroyed
+                while (animState != null && animState.enabled && this.CurrentVehicle != null && hinge.limits.min != limit)
 				{
-					yield return new WaitForEndOfFrame();
+                    if (animState.normalizedTime > 0.4)
+                        hinge.limits = new JointLimits { min = Mathf.Lerp(hinge.limits.min, limit, Time.deltaTime * 4), max = Mathf.Lerp(hinge.limits.min, limit + 0.1f, Time.deltaTime * 4), };
+                    yield return new WaitForEndOfFrame();
 				}
-			}
+
+                var animState2 = m_model.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
+                animState2.wrapMode = WrapMode.Once;
+
+                // wait until anim is finished or vehicle is destroyed
+                while (animState2 != null && animState2.enabled && this.CurrentVehicle != null)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+
+                var animState3 = m_model.PlayAnim(AnimGroup.Car, animCloseIndex, PlayMode.StopAll);
+                animState3.wrapMode = WrapMode.Once;
+
+                while (animState3 != null && animState3.enabled && this.CurrentVehicle != null && hinge.limits.max != 0)
+                {
+                    if(animState3.normalizedTime > 0.4)
+                        hinge.limits = new JointLimits { min = Mathf.Lerp(hinge.limits.min, 0, Time.deltaTime * 4), max = Mathf.Lerp(hinge.limits.max, 0f, Time.deltaTime * 4), };
+                    yield return new WaitForEndOfFrame();
+                }
+                hinge.limits = new JointLimits { min = 0, max = 0, };
+
+                var animState4 = m_model.PlayAnim("ped", animSittedIndex, PlayMode.StopAll);
+
+            }
 
 			// check if vehicle is alive
 			if (null == this.CurrentVehicle)

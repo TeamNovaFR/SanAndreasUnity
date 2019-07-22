@@ -368,12 +368,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncInterval: 0.1
   shouldPlayAnims: 1
-  TurnSpeed: 10
-  jumpSpeed: 8
   m_cameraDistance: 3
   m_cameraDistanceVehicle: 6
   m_cameraClampValue: {x: 60, y: 60}
   m_maxHealth: 100
+  m_inputSendInterval: 0.033333335
   m_enterVehicleRadius: 2
 --- !u!114 &114173420020992462
 MonoBehaviour:
@@ -387,11 +386,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e796a954503384dbd1282729710af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CursorSensitivity: {x: 7, y: 7}
   clampInDegrees: {x: 60, y: 60}
   smoothing: {x: 10, y: 10}
-  m_doSmooth: 0
-  m_smoothMovement: 0
+  m_doSmooth: 1
+  m_smoothMovement: 1
 --- !u!114 &114879899237604226
 MonoBehaviour:
   m_ObjectHideFlags: 0
