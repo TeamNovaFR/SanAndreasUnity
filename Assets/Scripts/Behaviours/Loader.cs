@@ -91,7 +91,8 @@ namespace SanAndreasUnity.Behaviours
 				new LoadingStep ( StepLoadAudio, "Loading audio" ),
 				new LoadingStep ( StepLoadCollision, "Loading collision files", 0.9f ),
 				new LoadingStep ( StepLoadItemInfo, "Loading item info", 2.4f ),
-				new LoadingStep ( StepLoadHandling, "Loading handling", 0.01f ),
+                new LoadingStep ( StepLoadAIPaths, "Loading ai paths", 0.05f ),
+                new LoadingStep ( StepLoadHandling, "Loading handling", 0.01f ),
 				//new LoadingStep ( () => { throw new System.Exception ("testing error handling"); }, "testing error handling", 0.01f ),
 				new LoadingStep ( StepLoadAnimGroups, "Loading animation groups", 0.02f ),
 				new LoadingStep ( StepLoadCarColors, "Loading car colors", 0.04f ),
@@ -352,7 +353,12 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		private static void StepLoadHandling ()
+        private static void StepLoadAIPaths()
+        {
+            PathNode.Load(Config.GetPath("ainodes_path"));
+        }
+
+        private static void StepLoadHandling ()
 		{
 			Handling.Load(Config.GetPath("handling_path"));
 		}
