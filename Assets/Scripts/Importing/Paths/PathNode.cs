@@ -58,9 +58,9 @@ namespace SanAndreasUnity.Importing.Vehicles
                         // read here !
                         memoryAddress = reader.ReadUInt32(); // works
                         unknownZero = reader.ReadUInt32(); // works
-                        pos[0] = reader.ReadInt16() / 8;
-                        pos[1] = reader.ReadInt16() / 8;
-                        pos[2] = reader.ReadInt16() / 8;
+                        pos[0] = reader.ReadInt16() / 8f;
+                        pos[1] = reader.ReadInt16() / 8f;
+                        pos[2] = reader.ReadInt16() / 8f;
                         unknownVar = reader.ReadInt16();
                         linkId = reader.ReadUInt16(); // works
                         areaId = reader.ReadUInt16(); // works
